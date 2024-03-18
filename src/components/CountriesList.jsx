@@ -7,12 +7,16 @@ const CountriesList = ({ isLoading, cities }) => {
   if (isLoading) return <Spinner />;
   if (cities.length === 0)
     return <Message message="Add some countries to your List First" />;
+
+  const countries = cities.reduce((arr, city) => {
+    if (!arr.map((cur) => cur.country).includes(city.country))
+      return [...arr, { country: city.country, emoji: city.emoji }];
+    else return arr;
+  }, []);
   return (
     <ul className={styles.countryList}>
-      {cities.map((country) => (
-        <CountryItem
-          country={{ country: country.country, emoji: country.emoji }}
-        />
+      {countries.map((country, i) => (
+        <CountryItem country={country} key={i} />
       ))}
     </ul>
   );
