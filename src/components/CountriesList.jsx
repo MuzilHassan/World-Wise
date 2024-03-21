@@ -3,7 +3,9 @@ import Message from "./Message";
 import Spinner from "./Spinner";
 import styles from "./CountryList.module.css";
 import CountryItem from "./CountryItem";
-const CountriesList = ({ isLoading, cities }) => {
+import { useCities } from "../context/CitiesContext";
+const CountriesList = () => {
+  const { isLoading, cities } = useCities();
   if (isLoading) return <Spinner />;
   if (cities.length === 0)
     return <Message message="Add some countries to your List First" />;
