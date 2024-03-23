@@ -23,7 +23,7 @@ const Map = () => {
   const lat = searchParams.get("lat");
   const lng = searchParams.get("lng");
   const { cities } = useCities();
-
+  console.log(geoLocationPosition);
   useEffect(() => {
     if (lat && lng) setPosition([lat, lng]);
   }, [lat, lng]);
@@ -35,7 +35,7 @@ const Map = () => {
   }, [geoLocationPosition]);
   return (
     <div className={styles.mapContainer}>
-      {!geoLocationPosition && (
+      {!geoLocationPosition.lat && (
         <Button type={"position"} onClick={getPosition}>
           {isLoading ? "Loading.." : "Use Location"}
         </Button>
