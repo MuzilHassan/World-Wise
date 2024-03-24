@@ -83,6 +83,30 @@
       },
       "notes": "",
       "date": "2024-03-24T17:18:57.611Z"
+    },
+    {
+      "id": "99ff",
+      "cityName": "Westmorland and Furness",
+      "country": "United Kingdom",
+      "emoji": "🇬🇧",
+      "position": {
+        "lat": "54.467498550747116",
+        "lng": "-2.7904366889272314"
+      },
+      "notes": "",
+      "date": "2024-03-24T19:18:44.682Z"
+    },
+    {
+      "id": "ca80",
+      "cityName": "Dún Laoghaire",
+      "country": "Ireland",
+      "emoji": "🇮🇪",
+      "position": {
+        "lat": "53.30150782171976",
+        "lng": "-6.105432802914115"
+      },
+      "notes": "",
+      "date": "2024-03-24T19:19:50.474Z"
     }
   ]
 }
