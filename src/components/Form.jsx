@@ -8,6 +8,9 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import Message from "./Message";
 import Spinner from "./Spinner";
 import { flagemojiToPNG } from "./helperFunction";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { useCities } from "../context/CitiesContext";
 export function convertToEmoji(countryCode) {
   const codePoints = countryCode
     .toUpperCase()
@@ -28,24 +31,40 @@ function Form() {
   const [searchParams] = useSearchParams();
   const lat = searchParams.get("lat");
   const lng = searchParams.get("lng");
+  const { addCity } = useCities();
+  const key = "65ff3e862d985792414042xahdf7625";
   useEffect(() => {
     async function afetchCityData() {
       try {
         setError("");
         setLoading(true);
+        // const res = await fetch(
+        //   `https://api.bigdatacloud.net/data//data/reverse-geocode-client?latitude=${lat}&longitude=${lng}`
+        // );
         const res = await fetch(
-          `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}`
+          `https://geocode.maps.co/reverse?lat=${lat}&lon=${lng}&api_key=65ff3e862d985792414042xahdf7625`
         );
-
+        if (res.status == 429)
+          throw new Error(
+            "Too many Requests please try again 30 milli seconds later"
+          );
         const data = await res.json();
-        if (!data.countryCode)
+
+        if (data.error)
           throw new Error(
             "This dosent seems to be a city, please click on seomewhere else"
           );
 
-        setCityName(data.city || data.locality);
-        setCountry(data.countryName);
-        setEmoji(convertToEmoji(data.countryCode));
+        setCityName(
+          data.address?.town ||
+            data.address?.county ||
+            data.address?.state_district ||
+            data.address?.district ||
+            data.address?.village ||
+            data?.display_name
+        );
+        setCountry(data.address?.country);
+        setEmoji(convertToEmoji(data.address?.country_code));
         setError("");
       } catch (error) {
         setError(error.message);
@@ -57,6 +76,28 @@ function Form() {
 
     afetchCityData();
   }, [lat, lng]);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!country || !cityName || !emoji) return;
+
+    const cityData = {
+      cityName,
+      country,
+      emoji,
+      position: {
+        lat,
+        lng,
+      },
+      notes,
+      date,
+    };
+    await addCity(cityData);
+    setCityName("");
+    setCountry("");
+    setEmoji("");
+    setNotes("");
+    navigate("/app/cities");
+  };
   if (loading) return <Spinner />;
   if (error) return <Message message={error} />;
   if (!lat && !lng)
@@ -64,7 +105,10 @@ function Form() {
       <Message message={"Thera are no values for latitued and longitutde"} />
     );
   return (
-    <form className={styles.form}>
+    <form
+      className={`${styles.form} ${loading ? styles.loading : ""}`}
+      onSubmit={handleSubmit}
+    >
       <div className={styles.row}>
         <label htmlFor="cityName">City name</label>
         <input
@@ -77,10 +121,11 @@ function Form() {
 
       <div className={styles.row}>
         <label htmlFor="date">When did you go to {cityName}?</label>
-        <input
+
+        <DatePicker
+          selected={date}
+          onChange={(date) => setDate(date)}
           id="date"
-          onChange={(e) => setDate(e.target.value)}
-          value={date}
         />
       </div>
 

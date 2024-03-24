@@ -13,7 +13,11 @@ const CityItem = ({
     position: { lat, lng },
   },
 }) => {
-  const { currentCity } = useCities();
+  const { currentCity, deleteCity } = useCities();
+  const HandleClick = (e) => {
+    e.preventDefault();
+    deleteCity(id);
+  };
   return (
     <li>
       <Link
@@ -28,7 +32,9 @@ const CityItem = ({
         </div>
         <div style={{ display: "flex", gap: "1.3rem", alignItems: "center" }}>
           <time className={styles.date}>{formatDate(date)}</time>
-          <button className={styles.deleteBtn}>&times;</button>
+          <button className={styles.deleteBtn} onClick={HandleClick}>
+            &times;
+          </button>
         </div>
       </Link>
     </li>
