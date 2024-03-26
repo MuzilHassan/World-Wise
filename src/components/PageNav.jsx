@@ -2,7 +2,9 @@ import React from "react";
 import { NavLink, Link } from "react-router-dom";
 import styles from "./PageNav.module.css";
 import Logo from "./Logo";
+import { useAuth } from "../context/UserContext";
 const PageNav = () => {
+  const { user } = useAuth();
   return (
     <nav className={styles.nav}>
       <Link to="/">
@@ -16,9 +18,13 @@ const PageNav = () => {
           <NavLink to="/pricing">Pricing</NavLink>
         </li>
         <li>
-          <NavLink to="/login" className={styles.ctaLink}>
-            Login
-          </NavLink>
+          {user ? (
+            <span className={styles.user}>{user.name}</span>
+          ) : (
+            <NavLink to="/login" className={styles.ctaLink}>
+              Login
+            </NavLink>
+          )}
         </li>
       </ul>
     </nav>

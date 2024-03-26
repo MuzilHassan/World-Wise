@@ -32,3 +32,10 @@ a.ctaLink:visited {
   padding: 0.8rem 2rem;
   border-radius: 7px;
 }
+
+.user {
+  color: var(--color-light--2);
+  text-transform: uppercase;
+  font-size: 1.5rem;
+  font-weight: 600;
+}

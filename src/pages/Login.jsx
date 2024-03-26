@@ -1,12 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PageNav from "../components/PageNav";
 import styles from "./Login.module.css";
+import { useAuth } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   // PRE-FILL FOR DEV PURPOSES
   const [email, setEmail] = useState("jack@example.com");
   const [password, setPassword] = useState("qwerty");
-
+  const { login, isLoggedIn, user } = useAuth();
+  const navigate = useNavigate();
+  const HandleClick = function (e) {
+    e.preventDefault();
+    login(email, password);
+  };
+  useEffect(() => {
+    console.log(user);
+    if (isLoggedIn === true) navigate("/app", { replace: true });
+  }, [isLoggedIn]);
   return (
     <main className={styles.login}>
       <PageNav />
@@ -32,7 +43,9 @@ export default function Login() {
         </div>
 
         <div>
-          <button>Login</button>
+          <button onClick={HandleClick} className={styles.primary}>
+            Login
+          </button>
         </div>
       </form>
     </main>
